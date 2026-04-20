@@ -1,3 +1,5 @@
+can you change this style.css so that the generated color palettes has borders around them as well as a nice font for the hex codes
+
 :root {
     --bg: #fdfcf8;
     --accent: #7ca5b8;
@@ -44,60 +46,49 @@ nav {
     gap: 20px;
 }
 
-/*  PALETTE CARD */
-.palette {
-    display: flex;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid #e6e6e6; /*  border added */
-    box-shadow: var(--shadow);
+.card {
     background: var(--card);
-    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
 }
 
-.palette:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+.card:hover { transform: translateY(-5px); }
+
+.palette-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
 }
 
-/*  COLOR BLOCK */
-.color-block {
-    flex: 1;
+.swatch-group {
+    display: flex;
     height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.swatch {
+    flex: 1;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
+    font-size: 0.7rem;
     cursor: pointer;
-
-    /*  nicer font for HEX */
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    font-weight: bold;
-
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-
-    transition: transform 0.15s;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-.color-block:hover {
-    transform: scale(1.05);
-}
-
-/* Button */
-button {
+.btn {
     background: var(--accent);
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background: #6a94a6;
+    text-decoration: none;
+    display: inline-block;
 }
