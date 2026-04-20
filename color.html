@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artie's Archive | Color Palettes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo"><strong>Artie's Archive</strong></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="color.html">Colors</a>
+            <a href="anatomy.html">Anatomy</a>
+            <a href="tutorials.html">Tutorials</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div>
+                <h1>Color Palettes</h1>
+                <p>Click a color to copy its HEX code!</p>
+            </div>
+            <button onclick="generateMultiplePalettes()">Generate New Palettes</button>
+        </header>
+
+        <div id="palette-container" class="grid">
+            </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
