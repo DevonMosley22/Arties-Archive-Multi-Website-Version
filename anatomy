@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anatomy References</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="loadAnatomy()">
+
+<header>
+    <h1>Anatomy & Pose References</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="palettes.html">Color Palettes</a>
+        <a href="anatomy.html">Anatomy</a>
+        <a href="tutorials.html">Tutorials</a>
+    </nav>
+</header>
+
+<button onclick="history.back()">← Back</button>
+
+<div id="anatomyContainer" class="grid"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
