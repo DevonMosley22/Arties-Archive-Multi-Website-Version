@@ -44,49 +44,60 @@ nav {
     gap: 20px;
 }
 
-.card {
-    background: var(--card);
-    padding: 20px;
+/*  PALETTE CARD */
+.palette {
+    display: flex;
     border-radius: 12px;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s;
-}
-
-.card:hover { transform: translateY(-5px); }
-
-.palette-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.swatch-group {
-    display: flex;
-    height: 100px;
-    border-radius: 8px;
     overflow: hidden;
+    border: 2px solid #e6e6e6; /*  border added */
+    box-shadow: var(--shadow);
+    background: var(--card);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.swatch {
+.palette:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/*  COLOR BLOCK */
+.color-block {
     flex: 1;
+    height: 100px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    padding-bottom: 5px;
-    font-size: 0.7rem;
+    padding-bottom: 10px;
     cursor: pointer;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+
+    /*  nicer font for HEX */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: bold;
+
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+
+    transition: transform 0.15s;
 }
 
-.btn {
+.color-block:hover {
+    transform: scale(1.05);
+}
+
+/* Button */
+button {
     background: var(--accent);
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #6a94a6;
 }
