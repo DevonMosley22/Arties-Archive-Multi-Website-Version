@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Art Tutorials</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="loadTutorials()">
+
+<header>
+    <h1>Art Tutorials</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="palettes.html">Color Palettes</a>
+        <a href="anatomy.html">Anatomy</a>
+        <a href="tutorials.html">Tutorials</a>
+    </nav>
+</header>
+
+<button onclick="history.back()">← Back</button>
+
+<div id="tutorialContainer"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
