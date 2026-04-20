@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artie's Archive | Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">Artie's Archive</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="color.html">Colors</a>
+            <a href="anatomy.html">Anatomy</a>
+            <a href="tutorials.html">Tutorials</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1>Welcome to the Archive</h1>
+            <p>A hand-picked collection of resources for new artists.</p>
+        </header>
+
+        <div class="grid">
+            <a href="color.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                <h3>Color Palettes</h3>
+                <p>Generate fresh inspiration for your next piece.</p>
+            </a>
+            <a href="anatomy.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                <h3>Anatomy & Pose</h3>
+                <p>Curated list of free reference libraries.</p>
+            </a>
+            <a href="tutorials.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
+                <h3>Art Tutorials</h3>
+                <p>Watch and learn basics, shading, and more.</p>
+            </a>
+        </div>
+    </main>
+</body>
+</html>
