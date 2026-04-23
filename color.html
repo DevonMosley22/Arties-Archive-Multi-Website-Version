@@ -8,7 +8,7 @@
 </head>
 <body>
     <nav>
-        <div class="logo"><strong>Artie's Archive</strong></div>
+        <div class="logo">Artie's Archive</div>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="color.html">Colors</a>
@@ -17,20 +17,17 @@
         </div>
     </nav>
 
-    <div class="container">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <div>
-                <h1>Color Palettes</h1>
-                <p>Click a color to copy its HEX code!</p>
-            </div>
-            <button onclick="generateMultiplePalettes()">Generate New Palettes</button>
+    <main class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1>Color Palette Generator</h1>
+            <p>Fresh inspiration for your next masterpiece. Click a color to copy the HEX code.</p>
+            <button class="btn" onclick="renderPalettes()">Generate New Sets</button>
         </header>
 
-        <div id="palette-container" class="grid">
+        <div id="palette-workspace" class="grid">
             </div>
-    </div>
+    </main>
 
-    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
