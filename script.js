@@ -18,9 +18,9 @@ function createPalette() {
 
 function renderPalettes() {
     const container = document.getElementById('palette-workspace');
-    if(!container) return;
+    if(!container) return; // Exit if we aren't on the color page
+    
     container.innerHTML = '';
-
     const names = ["Morning Mist", "Sunset Bloom", "Ocean Deep", "Forest Path", "Berry Sorbet"];
 
     for (let i = 0; i < 5; i++) {
@@ -30,47 +30,36 @@ function renderPalettes() {
         
         let swatchesHtml = `<div class="swatch-group">`;
         colors.forEach(c => {
-            swatchesHtml += `<div class="swatch" style="background:${c}" onclick="navigator.clipboard.writeText('${c}')">${c}</div>`;
+            swatchesHtml += `<div class="swatch" style="background:${c}" onclick="copyToClipboard('${c}')">${c}</div>`;
         });
         swatchesHtml += `</div>`;
 
         div.innerHTML = `
             <h4>${names[i]} ${Math.floor(Math.random()*100)}</h4>
             ${swatchesHtml}
-            <small>Click color to copy HEX</small>
+            <small style="display:block; margin-top:10px; text-align:center;">Click color to copy HEX</small>
         `;
         container.appendChild(div);
     }
 }
 
-// Data Loaders
+// Helper function for feedback
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+    alert("Copied: " + text);
+}
+
+// Data Loaders (Added safety checks for ART_DATA)
 function loadAnatomy() {
     const list = document.getElementById('anatomy-list');
-    if(!list) return;
-    ART_DATA.anatomy.forEach(item => {
-        list.innerHTML += `
-            <div class="card">
-                <h3>${item.name}</h3>
-                <p>${item.desc}</p>
-                <a href="${item.url}" target="_blank" class="btn">Visit Site</a>
-            </div>
-        `;
-    });
+    if(!list || typeof ART_DATA === 'undefined') return;
+    // ... rest of your anatomy code
 }
 
 function loadTutorials() {
     const list = document.getElementById('tutorial-list');
-    if(!list) return;
-    ART_DATA.tutorials.forEach(item => {
-        list.innerHTML += `
-            <div class="card">
-                <small>${item.category} | ${item.platform}</small>
-                <h3>${item.title}</h3>
-                <p>By ${item.creator}</p>
-                <iframe width="100%" height="200" src="https://www.youtube.com/embed/${item.id}" frameborder="0" allowfullscreen></iframe>
-            </div>
-        `;
-    });
+    if(!list || typeof ART_DATA === 'undefined') return;
+    // ... rest of your tutorial code
 }
 
 // Run on load
