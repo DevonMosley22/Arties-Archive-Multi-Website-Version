@@ -25,35 +25,36 @@ function hslToHex(h, s, l) {
 function generatePalette() {
     const palette = [];
 
-    // Pick ONE base hue for the whole palette
+    // One base hue for harmony
     const baseHue = Math.floor(Math.random() * 360);
 
-    // Random genre style
-    const genre = Math.floor(Math.random() * 4);
+    // Optional slight saturation randomness
+    const baseSaturation = 50 + Math.random() * 40;
 
-    for (let i = 0; i < 6; i++) {
-        let h = baseHue + (Math.random() * 20 - 10); // slight hue variation
-        let s, l;
+    // Define a full range from white → color → black
+    const steps = 6;
 
-        if (genre === 0) {
-            // 🌸 Pastel (tints)
-            s = 40 + Math.random() * 15;
-            l = 75 + i * 3 + Math.random() * 5;
-        } 
-        else if (genre === 1) {
-            // ⚡ Neon (bright tones)
-            s = 85 + Math.random() * 15;
-            l = 45 + i * 2 + Math.random() * 5;
-        } 
-        else if (genre === 2) {
-            // 🌫 Muted / earthy (tones)
-            s = 20 + Math.random() * 20;
-            l = 35 + i * 4 + Math.random() * 5;
-        } 
-        else {
-            // 🌈 Shades (darker progression)
-            s = 60 + Math.random() * 20;
-            l = 30 + i * 6 + Math.random() * 5;
+    for (let i = 0; i < steps; i++) {
+        const t = i / (steps - 1); 
+        // t goes from 0 → 1
+
+        let h = baseHue + (Math.random() * 10 - 5); // tiny variation
+        let s = baseSaturation;
+
+        // Lightness curve:
+        // 0   → near white (tint)
+        // 0.5 → base color
+        // 1   → near black (shade)
+        let l;
+
+        if (t < 0.5) {
+            // Tint side (toward white)
+            l = 90 - (t * 2) * 40; // 90 → 50
+            s *= 0.7 + t * 0.6;    // slightly desaturated near white
+        } else {
+            // Shade side (toward black)
+            l = 50 - ((t - 0.5) * 2) * 45; // 50 → 5
+            s *= 1 - (t - 0.5) * 0.5;      // slight desaturation toward black
         }
 
         // Clamp values
