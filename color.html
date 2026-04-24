@@ -6,6 +6,7 @@
     <title>Artie's Archive | Color Palettes</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <nav>
         <div class="logo"><strong>Artie's Archive</strong></div>
@@ -23,11 +24,13 @@
                 <h1>Color Palettes</h1>
                 <p>Click a color to copy its HEX code!</p>
             </div>
-            <button onclick="generateMultiplePalettes()">Generate New Palettes</button>
+
+            <!-- ⚠️ Make sure this matches your JS function -->
+            <button onclick="generatePalettes()">Generate New Palettes</button>
         </header>
 
-        <div id="palette-container" class="grid">
-            </div>
+        <!-- ✅ THIS is what your JS needs -->
+        <div id="paletteContainer" class="grid"></div>
     </div>
 
     <script src="data.js"></script>
