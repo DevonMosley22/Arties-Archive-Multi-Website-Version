@@ -24,6 +24,18 @@
             <p>A hand-picked collection of resources for new artists.</p>
         </header>
 
+        <!-- 🎨 NEW: PALETTE SECTION -->
+        <section style="margin-bottom: 3rem;">
+            <h2 style="text-align:center;">🎨 Random Color Palette</h2>
+
+            <div id="paletteContainer"></div>
+
+            <div style="text-align:center; margin-top: 15px;">
+                <button onclick="renderPalette()">Generate New Palette</button>
+            </div>
+        </section>
+
+        <!-- 📦 EXISTING GRID -->
         <div class="grid">
             <a href="color.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
                 <h3>Color Palettes</h3>
@@ -42,7 +54,7 @@
         </div>
     </main>
 
-    <!-- ✅ SAFE: load JS but it won't break homepage -->
+    <!-- ✅ JS -->
     <script src="script.js"></script>
 </body>
 </html>
