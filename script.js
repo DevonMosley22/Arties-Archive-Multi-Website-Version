@@ -1,5 +1,5 @@
 // ==========================
-// 🎨 PALETTE SYSTEM
+// 🎨 COLOR CONVERSION
 // ==========================
 
 function hslToHex(h, s, l) {
@@ -20,139 +20,102 @@ function hslToHex(h, s, l) {
     return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-// Generate structured palette
-function generatePalette() {
-    const palette = [];
-
-    const genre = Math.floor(Math.random() * 4);
-
-    for (let i = 0; i < 6; i++) {
-        let h = Math.floor(Math.random() * 360);
-        let s, l;
-
-        if (genre === 0) {
-            // 🌸 Pastel
-            s = 40 + Math.random() * 20;
-            l = 75 + Math.random() * 10;
-        } 
-        else if (genre === 1) {
-            // ⚡ Neon
-            s = 90 + Math.random() * 10;
-            l = 50 + Math.random() * 10;
-        } 
-        else if (genre === 2) {
-            // 🌫 Muted / earthy
-            s = 20 + Math.random() * 20;
-            l = 40 + Math.random() * 20;
-        } 
-        else {
-            // 🌈 Random vibrant hues
-            s = 60 + Math.random() * 30;
-            l = 40 + Math.random() * 30;
-        }
-
-        palette.push(hslToHex(h, s, l));
-    }
-
-    return palette;
-}
 // ==========================
-// 🖼️ RENDER PALETTES
+// 🎨 PALETTE GENERATOR
 // ==========================
 
 function generatePalette() {
     const palette = [];
 
-    // Pick harmony type
-    const harmony = Math.floor(Math.random() * 6);
-
-    // Base color
     const baseHue = Math.floor(Math.random() * 360);
 
-    // Optional style (keeps your vibe system)
-    const style = Math.floor(Math.random() * 4);
+    // Harmony types
+    const harmonies = [
+        "monochromatic",
+        "analogous",
+        "complementary",
+        "split",
+        "triadic",
+        "tetradic"
+    ];
+    const harmony = harmonies[Math.floor(Math.random() * harmonies.length)];
 
-    function getSL() {
+    // Style system
+    const styles = ["pastel", "neon", "muted", "vibrant"];
+    const style = styles[Math.floor(Math.random() * styles.length)];
+
+    function getSL(index = 0) {
         let s, l;
 
-        if (style === 0) {
-            // Pastel
-            s = 40 + Math.random() * 20;
-            l = 75 + Math.random() * 10;
-        } else if (style === 1) {
-            // Neon
-            s = 90 + Math.random() * 10;
-            l = 50 + Math.random() * 10;
-        } else if (style === 2) {
-            // Muted
-            s = 20 + Math.random() * 20;
-            l = 40 + Math.random() * 20;
-        } else {
-            // Vibrant
-            s = 60 + Math.random() * 30;
-            l = 40 + Math.random() * 30;
+        switch (style) {
+            case "pastel":
+                s = 40 + Math.random() * 20;
+                l = 70 + index * 5;
+                break;
+            case "neon":
+                s = 85 + Math.random() * 15;
+                l = 50 + (index % 2) * 10;
+                break;
+            case "muted":
+                s = 20 + Math.random() * 20;
+                l = 35 + index * 6;
+                break;
+            default: // vibrant
+                s = 60 + Math.random() * 30;
+                l = 45 + Math.random() * 15;
         }
 
         return { s, l };
     }
 
-    function addColor(h) {
-        const { s, l } = getSL();
+    function addColor(h, i) {
+        const { s, l } = getSL(i);
         palette.push(hslToHex((h + 360) % 360, s, l));
     }
 
+    // ==========================
+    // 🎯 HARMONY LOGIC
+    // ==========================
+
     switch (harmony) {
-        case 0:
-            // 🎯 Monochromatic (same hue, varying lightness)
+
+        case "monochromatic":
             for (let i = 0; i < 6; i++) {
-                const { s } = getSL();
-                const l = 20 + i * 12;
-                palette.push(hslToHex(baseHue, s, l));
+                addColor(baseHue, i);
             }
             break;
 
-        case 1:
-            // 🌈 Analogous (±30°)
-            for (let i = -2; i <= 3; i++) {
-                addColor(baseHue + i * 15);
-            }
+        case "analogous":
+            [-30, -15, 0, 15, 30, 45].forEach((offset, i) => {
+                addColor(baseHue + offset, i);
+            });
             break;
 
-        case 2:
-            // ⚖️ Complementary (base + opposite)
+        case "complementary":
             for (let i = 0; i < 3; i++) {
-                addColor(baseHue);
-                addColor(baseHue + 180);
+                addColor(baseHue, i);
+                addColor(baseHue + 180, i);
             }
             break;
 
-        case 3:
-            // 🔀 Split Complementary
-            addColor(baseHue);
-            addColor(baseHue + 150);
-            addColor(baseHue + 210);
-            addColor(baseHue + 30);
-            addColor(baseHue - 30);
-            addColor(baseHue + 180);
+        case "split":
+            [0, 150, 210, -30, 30, 180].forEach((offset, i) => {
+                addColor(baseHue + offset, i);
+            });
             break;
 
-        case 4:
-            // 🔺 Triadic (120° apart)
+        case "triadic":
             for (let i = 0; i < 2; i++) {
-                addColor(baseHue);
-                addColor(baseHue + 120);
-                addColor(baseHue + 240);
+                addColor(baseHue, i);
+                addColor(baseHue + 120, i);
+                addColor(baseHue + 240, i);
             }
             break;
 
-        case 5:
-            // ⬛ Tetradic (rectangle: 0°, 90°, 180°, 270°)
-            addColor(baseHue);
-            addColor(baseHue + 90);
-            addColor(baseHue + 180);
-            addColor(baseHue + 270);
-            addColor(baseHue + 45);
-            addColor(baseHue + 225);
+        case "tetradic":
+            [0, 90, 180, 270, 45, 225].forEach((offset, i) => {
+                addColor(baseHue + offset, i);
+            });
             break;
     }
 
@@ -160,14 +123,37 @@ function generatePalette() {
 }
 
 // ==========================
-// 🚀 SAFE AUTO LOAD
+// 🖼️ RENDER MULTIPLE PALETTES
+// ==========================
+
+function generatePalettes(count = 5) {
+    const container = document.getElementById("paletteContainer");
+    container.innerHTML = "";
+
+    for (let i = 0; i < count; i++) {
+        const palette = generatePalette();
+
+        const paletteDiv = document.createElement("div");
+        paletteDiv.classList.add("palette");
+
+        palette.forEach(color => {
+            const swatch = document.createElement("div");
+            swatch.classList.add("color-box");
+            swatch.style.backgroundColor = color;
+            swatch.textContent = color;
+
+            paletteDiv.appendChild(swatch);
+        });
+
+        container.appendChild(paletteDiv);
+    }
+}
+
+// ==========================
+// 🚀 AUTO LOAD
 // ==========================
 
 window.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("paletteContainer");
-
-    // only run if we're on the color page
-    if (container) {
-        generatePalettes();
-    }
+    if (container) generatePalettes();
 });
