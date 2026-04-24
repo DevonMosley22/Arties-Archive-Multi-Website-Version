@@ -1,10 +1,11 @@
+can you change this code to where the randomly generated colors include monochromatics, analogous, complementary, split-complementary, triadic, and tetradic values
+
+
 // ==========================
 // 🎨 PALETTE SYSTEM
 // ==========================
 
 function hslToHex(h, s, l) {
-    // Ensure h stays within 0-360
-    h = (h + 360) % 360;
     s /= 100;
     l /= 100;
 
@@ -22,64 +23,35 @@ function hslToHex(h, s, l) {
     return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+// Generate structured palette
 function generatePalette() {
     const palette = [];
-    const baseHue = Math.floor(Math.random() * 360);
-    const saturation = 60 + Math.random() * 30; // Standard vibrant saturation
-    const lightness = 45 + Math.random() * 10;   // Standard balanced lightness
 
-    // Define the 6 harmony types
-    const schemes = [
-        'monochromatic', 
-        'analogous', 
-        'complementary', 
-        'split-complementary', 
-        'triadic', 
-        'tetradic'
-    ];
-    const selectedScheme = schemes[Math.floor(Math.random() * schemes.length)];
+    const genre = Math.floor(Math.random() * 4);
 
     for (let i = 0; i < 6; i++) {
-        let h = baseHue;
-        let s = saturation;
-        let l = lightness;
+        let h = Math.floor(Math.random() * 360);
+        let s, l;
 
-        switch (selectedScheme) {
-            case 'monochromatic':
-                // Same hue, varying lightness and saturation
-                s = 30 + (i * 12);
-                l = 20 + (i * 14);
-                break;
-
-            case 'analogous':
-                // Neighbors on the color wheel (30 degree increments)
-                h = baseHue + (i * 20);
-                break;
-
-            case 'complementary':
-                // Opposite sides (0 and 180). Pattern: A, A, A, B, B, B
-                h = i < 3 ? baseHue : baseHue + 180;
-                break;
-
-            case 'split-complementary':
-                // Base + two colors adjacent to its complement
-                // 0, 150, 210
-                const splitOffsets = [0, 0, 150, 150, 210, 210];
-                h = baseHue + splitOffsets[i];
-                break;
-
-            case 'triadic':
-                // Three colors equally spaced (120 degrees)
-                const triadOffsets = [0, 0, 120, 120, 240, 240];
-                h = baseHue + triadOffsets[i];
-                break;
-
-            case 'tetradic':
-                // Two complementary pairs (Rectangle)
-                // 0, 60, 180, 240
-                const tetraOffsets = [0, 60, 180, 240, 0, 180];
-                h = baseHue + tetraOffsets[i];
-                break;
+        if (genre === 0) {
+            // 🌸 Pastel
+            s = 40 + Math.random() * 20;
+            l = 75 + Math.random() * 10;
+        } 
+        else if (genre === 1) {
+            // ⚡ Neon
+            s = 90 + Math.random() * 10;
+            l = 50 + Math.random() * 10;
+        } 
+        else if (genre === 2) {
+            // 🌫 Muted / earthy
+            s = 20 + Math.random() * 20;
+            l = 40 + Math.random() * 20;
+        } 
+        else {
+            // 🌈 Random vibrant hues
+            s = 60 + Math.random() * 30;
+            l = 40 + Math.random() * 30;
         }
 
         palette.push(hslToHex(h, s, l));
@@ -87,3 +59,118 @@ function generatePalette() {
 
     return palette;
 }
+// ==========================
+// 🖼️ RENDER PALETTES
+// ==========================
+
+function generatePalette() {
+    const palette = [];
+
+    // Pick harmony type
+    const harmony = Math.floor(Math.random() * 6);
+
+    // Base color
+    const baseHue = Math.floor(Math.random() * 360);
+
+    // Optional style (keeps your vibe system)
+    const style = Math.floor(Math.random() * 4);
+
+    function getSL() {
+        let s, l;
+
+        if (style === 0) {
+            // Pastel
+            s = 40 + Math.random() * 20;
+            l = 75 + Math.random() * 10;
+        } else if (style === 1) {
+            // Neon
+            s = 90 + Math.random() * 10;
+            l = 50 + Math.random() * 10;
+        } else if (style === 2) {
+            // Muted
+            s = 20 + Math.random() * 20;
+            l = 40 + Math.random() * 20;
+        } else {
+            // Vibrant
+            s = 60 + Math.random() * 30;
+            l = 40 + Math.random() * 30;
+        }
+
+        return { s, l };
+    }
+
+    function addColor(h) {
+        const { s, l } = getSL();
+        palette.push(hslToHex((h + 360) % 360, s, l));
+    }
+
+    switch (harmony) {
+        case 0:
+            // 🎯 Monochromatic (same hue, varying lightness)
+            for (let i = 0; i < 6; i++) {
+                const { s } = getSL();
+                const l = 20 + i * 12;
+                palette.push(hslToHex(baseHue, s, l));
+            }
+            break;
+
+        case 1:
+            // 🌈 Analogous (±30°)
+            for (let i = -2; i <= 3; i++) {
+                addColor(baseHue + i * 15);
+            }
+            break;
+
+        case 2:
+            // ⚖️ Complementary (base + opposite)
+            for (let i = 0; i < 3; i++) {
+                addColor(baseHue);
+                addColor(baseHue + 180);
+            }
+            break;
+
+        case 3:
+            // 🔀 Split Complementary
+            addColor(baseHue);
+            addColor(baseHue + 150);
+            addColor(baseHue + 210);
+            addColor(baseHue + 30);
+            addColor(baseHue - 30);
+            addColor(baseHue + 180);
+            break;
+
+        case 4:
+            // 🔺 Triadic (120° apart)
+            for (let i = 0; i < 2; i++) {
+                addColor(baseHue);
+                addColor(baseHue + 120);
+                addColor(baseHue + 240);
+            }
+            break;
+
+        case 5:
+            // ⬛ Tetradic (rectangle: 0°, 90°, 180°, 270°)
+            addColor(baseHue);
+            addColor(baseHue + 90);
+            addColor(baseHue + 180);
+            addColor(baseHue + 270);
+            addColor(baseHue + 45);
+            addColor(baseHue + 225);
+            break;
+    }
+
+    return palette;
+}
+
+// ==========================
+// 🚀 SAFE AUTO LOAD
+// ==========================
+
+window.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("paletteContainer");
+
+    // only run if we're on the color page
+    if (container) {
+        generatePalettes();
+    }
+});
