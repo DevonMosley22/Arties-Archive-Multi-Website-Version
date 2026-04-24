@@ -25,45 +25,51 @@ function hslToHex(h, s, l) {
 function generatePalette() {
     const palette = [];
 
-    // One base hue for harmony
-    const baseHue = Math.floor(Math.random() * 360);
+    const totalColors = 6;
 
-    // Optional slight saturation randomness
-    const baseSaturation = 50 + Math.random() * 40;
+    // Random number of color families (2 or 3)
+    const familyCount = 2 + Math.floor(Math.random() * 2);
 
-    // Define a full range from white → color → black
-    const steps = 6;
+    const colorsPerFamily = Math.ceil(totalColors / familyCount);
 
-    for (let i = 0; i < steps; i++) {
-        const t = i / (steps - 1); 
-        // t goes from 0 → 1
+    for (let f = 0; f < familyCount; f++) {
 
-        let h = baseHue + (Math.random() * 10 - 5); // tiny variation
-        let s = baseSaturation;
+        // Each family gets its own hue
+        const baseHue = Math.floor(Math.random() * 360);
 
-        // Lightness curve:
-        // 0   → near white (tint)
-        // 0.5 → base color
-        // 1   → near black (shade)
-        let l;
+        // Random saturation style per family
+        const baseSaturation = 40 + Math.random() * 50;
 
-        if (t < 0.5) {
-            // Tint side (toward white)
-            l = 90 - (t * 2) * 40; // 90 → 50
-            s *= 0.7 + t * 0.6;    // slightly desaturated near white
-        } else {
-            // Shade side (toward black)
-            l = 50 - ((t - 0.5) * 2) * 45; // 50 → 5
-            s *= 1 - (t - 0.5) * 0.5;      // slight desaturation toward black
+        for (let i = 0; i < colorsPerFamily; i++) {
+            if (palette.length >= totalColors) break;
+
+            const t = i / (colorsPerFamily - 1 || 1);
+
+            let h = baseHue + (Math.random() * 10 - 5);
+            let s = baseSaturation;
+            let l;
+
+            if (t < 0.5) {
+                // 🌟 Tints (toward white)
+                l = 90 - (t * 2) * 40; // 90 → 50
+                s *= 0.7 + t * 0.6;
+            } else {
+                // 🌑 Shades (toward black)
+                l = 50 - ((t - 0.5) * 2) * 45; // 50 → 5
+                s *= 1 - (t - 0.5) * 0.5;
+            }
+
+            // Clamp values
+            h = (h + 360) % 360;
+            s = Math.min(100, Math.max(0, s));
+            l = Math.min(95, Math.max(5, l));
+
+            palette.push(hslToHex(h, s, l));
         }
-
-        // Clamp values
-        h = (h + 360) % 360;
-        s = Math.min(100, Math.max(0, s));
-        l = Math.min(95, Math.max(5, l));
-
-        palette.push(hslToHex(h, s, l));
     }
+
+    // 🎲 Shuffle so it doesn't look like gradients
+    palette.sort(() => Math.random() - 0.5);
 
     return palette;
 }
