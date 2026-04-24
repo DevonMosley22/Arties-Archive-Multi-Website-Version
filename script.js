@@ -21,35 +21,26 @@ function hslToHex(h, s, l) {
 }
 
 // Generate structured palette
-function generatePalette(forceGrayscale = false) {
+function generatePalette() {
     const palette = [];
 
-    // now 5 genres (including grayscale)
-    const genre = forceGrayscale
-        ? 0
-        : Math.floor(Math.random() * 5);
+    const genre = Math.floor(Math.random() * 4);
 
     for (let i = 0; i < 6; i++) {
         let h = Math.floor(Math.random() * 360);
         let s, l;
 
         if (genre === 0) {
-            // ⚫ Grayscale (white → black)
-            h = 0;
-            s = 0;
-            l = 100 - (i * 20); // smooth gradient
-        } 
-        else if (genre === 1) {
             // 🌸 Pastel
             s = 40 + Math.random() * 20;
             l = 75 + Math.random() * 10;
         } 
-        else if (genre === 2) {
+        else if (genre === 1) {
             // ⚡ Neon
             s = 90 + Math.random() * 10;
             l = 50 + Math.random() * 10;
         } 
-        else if (genre === 3) {
+        else if (genre === 2) {
             // 🌫 Muted / earthy
             s = 20 + Math.random() * 20;
             l = 40 + Math.random() * 20;
@@ -65,7 +56,6 @@ function generatePalette(forceGrayscale = false) {
 
     return palette;
 }
-
 // ==========================
 // 🖼️ RENDER PALETTES
 // ==========================
@@ -77,8 +67,7 @@ function generatePalettes() {
     container.innerHTML = "";
 
     for (let i = 0; i < 6; i++) {
-        // force the first palette to be grayscale
-        const palette = generatePalette(i === 0);
+        const palette = generatePalette();
 
         const paletteDiv = document.createElement("div");
         paletteDiv.className = "palette";
