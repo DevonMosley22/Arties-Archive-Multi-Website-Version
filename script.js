@@ -1,54 +1,64 @@
-// ==========================
-// 🎨 PALETTE SYSTEM
-// ==========================
-
-function hslToHex(h, s, l) {
-    s /= 100;
-    l /= 100;
-
-    const k = n => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-
-    const f = n =>
-        Math.round(
-            255 *
-            (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
-        )
-            .toString(16)
-            .padStart(2, "0");
-
-    return `#${f(0)}${f(8)}${f(4)}`;
-}
-
-// Generate structured palette
 function generatePalette() {
     const palette = [];
 
-    const genre = Math.floor(Math.random() * 4);
+    // 🎯 Pick a harmony type
+    const harmonyTypes = ["analogous", "complementary", "triadic"];
+    const harmony = harmonyTypes[Math.floor(Math.random() * harmonyTypes.length)];
+
+    // 🎯 Base hue
+    const baseHue = Math.floor(Math.random() * 360);
+
+    // 🎲 Chance for grayscale palette
+    const grayscalePalette = Math.random() < 0.15;
+
+    // Helper to shift hue safely
+    const shiftHue = (h, amount) => (h + amount + 360) % 360;
 
     for (let i = 0; i < 6; i++) {
-        let h = Math.floor(Math.random() * 360);
-        let s, l;
+        let h, s, l;
 
-        if (genre === 0) {
-            // 🌸 Pastel
-            s = 40 + Math.random() * 20;
-            l = 75 + Math.random() * 10;
-        } 
-        else if (genre === 1) {
-            // ⚡ Neon
-            s = 90 + Math.random() * 10;
-            l = 50 + Math.random() * 10;
-        } 
-        else if (genre === 2) {
-            // 🌫 Muted / earthy
-            s = 20 + Math.random() * 20;
-            l = 40 + Math.random() * 20;
-        } 
-        else {
-            // 🌈 Random vibrant hues
-            s = 60 + Math.random() * 30;
+        if (grayscalePalette) {
+            // ⚫ Structured grayscale (dark → light)
+            s = 0;
+            l = 15 + (i * 70) / 5; // evenly spaced lightness
+        } else {
+            // 🎨 Pick hue based on harmony
+            if (harmony === "analogous") {
+                h = shiftHue(baseHue, (i - 3) * 10); // tight cluster
+            } 
+            else if (harmony === "complementary") {
+                h = i < 3 
+                    ? baseHue 
+                    : shiftHue(baseHue, 180); // split palette
+            } 
+            else {
+                // triadic
+                const triad = [0, 120, 240];
+                h = shiftHue(baseHue, triad[i % 3]);
+            }
+
+            // 🎛 Base saturation & lightness
+            s = 50 + Math.random() * 40;
             l = 40 + Math.random() * 30;
+
+            // 🎨 Apply variation (shade / tint / tone)
+            const variation = Math.random();
+
+            if (variation < 0.33) {
+                // Shade
+                l *= 0.65;
+            } else if (variation < 0.66) {
+                // Tint
+                l = Math.min(95, l * 1.3);
+            } else {
+                // Tone
+                s *= 0.5;
+            }
+
+            // 🎲 Occasional grayscale accent
+            if (Math.random() < 0.08) {
+                s = 0;
+            }
         }
 
         palette.push(hslToHex(h, s, l));
@@ -56,63 +66,3 @@ function generatePalette() {
 
     return palette;
 }
-// ==========================
-// 🖼️ RENDER PALETTES
-// ==========================
-
-function generatePalettes() {
-    const container = document.getElementById("paletteContainer");
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    for (let i = 0; i < 6; i++) {
-        const palette = generatePalette();
-
-        const paletteDiv = document.createElement("div");
-        paletteDiv.className = "palette";
-
-        palette.forEach(color => {
-            const box = document.createElement("div");
-            box.className = "color-box";
-            box.style.background = color;
-
-            // HEX text container
-            const hex = document.createElement("div");
-            hex.className = "hex";
-
-            // Copy button
-            const copyBtn = document.createElement("button");
-            copyBtn.className = "copy-btn";
-            copyBtn.textContent = "Copy";
-
-            copyBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                navigator.clipboard.writeText(color);
-                copyBtn.textContent = "Copied!";
-                setTimeout(() => (copyBtn.textContent = "Copy"), 800);
-            });
-
-            hex.innerHTML = `<span>${color}</span>`;
-            hex.appendChild(copyBtn);
-
-            box.appendChild(hex);
-            paletteDiv.appendChild(box);
-        });
-
-        container.appendChild(paletteDiv);
-    }
-}
-
-// ==========================
-// 🚀 SAFE AUTO LOAD
-// ==========================
-
-window.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("paletteContainer");
-
-    // only run if we're on the color page
-    if (container) {
-        generatePalettes();
-    }
-});
