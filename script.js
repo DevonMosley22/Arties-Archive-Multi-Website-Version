@@ -25,32 +25,41 @@ function hslToHex(h, s, l) {
 function generatePalette() {
     const palette = [];
 
+    // Pick ONE base hue for the whole palette
+    const baseHue = Math.floor(Math.random() * 360);
+
+    // Random genre style
     const genre = Math.floor(Math.random() * 4);
 
     for (let i = 0; i < 6; i++) {
-        let h = Math.floor(Math.random() * 360);
+        let h = baseHue + (Math.random() * 20 - 10); // slight hue variation
         let s, l;
 
         if (genre === 0) {
-            // 🌸 Pastel
-            s = 40 + Math.random() * 20;
-            l = 75 + Math.random() * 10;
+            // 🌸 Pastel (tints)
+            s = 40 + Math.random() * 15;
+            l = 75 + i * 3 + Math.random() * 5;
         } 
         else if (genre === 1) {
-            // ⚡ Neon
-            s = 90 + Math.random() * 10;
-            l = 50 + Math.random() * 10;
+            // ⚡ Neon (bright tones)
+            s = 85 + Math.random() * 15;
+            l = 45 + i * 2 + Math.random() * 5;
         } 
         else if (genre === 2) {
-            // 🌫 Muted / earthy
+            // 🌫 Muted / earthy (tones)
             s = 20 + Math.random() * 20;
-            l = 40 + Math.random() * 20;
+            l = 35 + i * 4 + Math.random() * 5;
         } 
         else {
-            // 🌈 Random vibrant hues
-            s = 60 + Math.random() * 30;
-            l = 40 + Math.random() * 30;
+            // 🌈 Shades (darker progression)
+            s = 60 + Math.random() * 20;
+            l = 30 + i * 6 + Math.random() * 5;
         }
+
+        // Clamp values
+        h = (h + 360) % 360;
+        s = Math.min(100, Math.max(0, s));
+        l = Math.min(95, Math.max(5, l));
 
         palette.push(hslToHex(h, s, l));
     }
