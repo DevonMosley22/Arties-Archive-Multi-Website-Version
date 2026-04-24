@@ -25,12 +25,39 @@ function hslToHex(h, s, l) {
 function generatePalette() {
     const palette = [];
 
-    const genre = Math.floor(Math.random() * 4);
+    const genre = Math.floor(Math.random() * 5);
 
     for (let i = 0; i < 6; i++) {
         let h = Math.floor(Math.random() * 360);
         let s, l;
+if (genre === 0) {
+    // ⚫ Grayscale (white → black)
+    h = 0;          // hue doesn't matter when saturation is 0
+    s = 0;          // no color = grayscale
 
+    // evenly step from light to dark
+    l = 100 - (i * (100 / 5)); 
+}
+else if (genre === 1) {
+    // 🌸 Pastel
+    s = 40 + Math.random() * 20;
+    l = 75 + Math.random() * 10;
+} 
+else if (genre === 2) {
+    // ⚡ Neon
+    s = 90 + Math.random() * 10;
+    l = 50 + Math.random() * 10;
+} 
+else if (genre === 3) {
+    // 🌫 Muted / earthy
+    s = 20 + Math.random() * 20;
+    l = 40 + Math.random() * 20;
+} 
+else {
+    // 🌈 Random vibrant hues
+    s = 60 + Math.random() * 30;
+    l = 40 + Math.random() * 30;
+}
         if (genre === 0) {
             // 🌸 Pastel
             s = 40 + Math.random() * 20;
