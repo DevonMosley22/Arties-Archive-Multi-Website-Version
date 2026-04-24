@@ -29,7 +29,6 @@ function generatePalette() {
 
     const baseHue = Math.floor(Math.random() * 360);
 
-    // Harmony types
     const harmonies = [
         "monochromatic",
         "analogous",
@@ -38,9 +37,10 @@ function generatePalette() {
         "triadic",
         "tetradic"
     ];
-    const harmony = harmonies[Math.floor(Math.random() * harmonies.length)];
 
-    // Style system
+    const harmony =
+        harmonies[Math.floor(Math.random() * harmonies.length)];
+
     const styles = ["pastel", "neon", "muted", "vibrant"];
     const style = styles[Math.floor(Math.random() * styles.length)];
 
@@ -60,7 +60,7 @@ function generatePalette() {
                 s = 20 + Math.random() * 20;
                 l = 35 + index * 6;
                 break;
-            default: // vibrant
+            default:
                 s = 60 + Math.random() * 30;
                 l = 45 + Math.random() * 15;
         }
@@ -73,22 +73,15 @@ function generatePalette() {
         palette.push(hslToHex((h + 360) % 360, s, l));
     }
 
-    // ==========================
-    // 🎯 HARMONY LOGIC
-    // ==========================
-
     switch (harmony) {
-
         case "monochromatic":
-            for (let i = 0; i < 6; i++) {
-                addColor(baseHue, i);
-            }
+            for (let i = 0; i < 6; i++) addColor(baseHue, i);
             break;
 
         case "analogous":
-            [-30, -15, 0, 15, 30, 45].forEach((offset, i) => {
-                addColor(baseHue + offset, i);
-            });
+            [-30, -15, 0, 15, 30, 45].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
             break;
 
         case "complementary":
@@ -99,9 +92,9 @@ function generatePalette() {
             break;
 
         case "split":
-            [0, 150, 210, -30, 30, 180].forEach((offset, i) => {
-                addColor(baseHue + offset, i);
-            });
+            [0, 150, 210, -30, 30, 180].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
             break;
 
         case "triadic":
@@ -113,9 +106,9 @@ function generatePalette() {
             break;
 
         case "tetradic":
-            [0, 90, 180, 270, 45, 225].forEach((offset, i) => {
-                addColor(baseHue + offset, i);
-            });
+            [0, 90, 180, 270, 45, 225].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
             break;
     }
 
@@ -123,37 +116,56 @@ function generatePalette() {
 }
 
 // ==========================
-// 🖼️ RENDER MULTIPLE PALETTES
+// 🖼️ RENDER SINGLE PALETTE
 // ==========================
 
-function generatePalettes(count = 5) {
+function renderPalette() {
     const container = document.getElementById("paletteContainer");
+    if (!container) return;
+
     container.innerHTML = "";
 
-    for (let i = 0; i < count; i++) {
-        const palette = generatePalette();
+    const palette = generatePalette();
 
-        const paletteDiv = document.createElement("div");
-        paletteDiv.classList.add("palette");
+    palette.forEach(color => {
+        const swatch = document.createElement("div");
+        swatch.classList.add("color-box");
+        swatch.style.backgroundColor = color;
 
-        palette.forEach(color => {
-            const swatch = document.createElement("div");
-            swatch.classList.add("color-box");
-            swatch.style.backgroundColor = color;
-            swatch.textContent = color;
+        const label = document.createElement("span");
+        label.textContent = color;
 
-            paletteDiv.appendChild(swatch);
+        // 🔥 click to copy
+        swatch.addEventListener("click", () => {
+            navigator.clipboard.writeText(color);
+            label.textContent = "Copied!";
+            setTimeout(() => (label.textContent = color), 1000);
         });
 
-        container.appendChild(paletteDiv);
-    }
+        swatch.appendChild(label);
+        container.appendChild(swatch);
+    });
 }
 
 // ==========================
-// 🚀 AUTO LOAD
+// 🚀 INIT
 // ==========================
 
 window.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("paletteContainer");
-    if (container) generatePalettes();
+    renderPalette();
+
+    // Button hookup (no inline JS needed)
+    const btn = document.getElementById("generateBtn");
+    if (btn) btn.addEventListener("click", renderPalette);
+});
+
+// ==========================
+// ⌨️ SPACEBAR GENERATION
+// ==========================
+
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        e.preventDefault();
+        renderPalette();
+    }
 });
