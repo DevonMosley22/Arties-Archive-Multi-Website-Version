@@ -1,52 +1,85 @@
+// ==========================
+// 🎨 PALETTE SYSTEM
+// ==========================
+
+function hslToHex(h, s, l) {
+    // Ensure h stays within 0-360
+    h = (h + 360) % 360;
+    s /= 100;
+    l /= 100;
+
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+
+    const f = n =>
+        Math.round(
+            255 *
+            (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
+        )
+            .toString(16)
+            .padStart(2, "0");
+
+    return `#${f(0)}${f(8)}${f(4)}`;
+}
+
 function generatePalette() {
     const palette = [];
-
-    const harmonyTypes = ["analogous", "complementary", "triadic"];
-    const harmony = harmonyTypes[Math.floor(Math.random() * harmonyTypes.length)];
-
     const baseHue = Math.floor(Math.random() * 360);
+    const saturation = 60 + Math.random() * 30; // Standard vibrant saturation
+    const lightness = 45 + Math.random() * 10;   // Standard balanced lightness
 
-    const shiftHue = (h, amount) => (h + amount + 360) % 360;
+    // Define the 6 harmony types
+    const schemes = [
+        'monochromatic', 
+        'analogous', 
+        'complementary', 
+        'split-complementary', 
+        'triadic', 
+        'tetradic'
+    ];
+    const selectedScheme = schemes[Math.floor(Math.random() * schemes.length)];
 
     for (let i = 0; i < 6; i++) {
-        let h, s, l;
+        let h = baseHue;
+        let s = saturation;
+        let l = lightness;
 
-        // 🎨 Harmony-based hue
-        if (harmony === "analogous") {
-            h = shiftHue(baseHue, (i - 3) * 10);
-        } 
-        else if (harmony === "complementary") {
-            h = i < 3 ? baseHue : shiftHue(baseHue, 180);
-        } 
-        else {
-            const triad = [0, 120, 240];
-            h = shiftHue(baseHue, triad[i % 3]);
-        }
+        switch (selectedScheme) {
+            case 'monochromatic':
+                // Same hue, varying lightness and saturation
+                s = 30 + (i * 12);
+                l = 20 + (i * 14);
+                break;
 
-        // 🎛 Base values
-        s = 50 + Math.random() * 40;
-        l = 40 + Math.random() * 30;
+            case 'analogous':
+                // Neighbors on the color wheel (30 degree increments)
+                h = baseHue + (i * 20);
+                break;
 
-        // 🎨 Variation system
-        const variation = Math.random();
+            case 'complementary':
+                // Opposite sides (0 and 180). Pattern: A, A, A, B, B, B
+                h = i < 3 ? baseHue : baseHue + 180;
+                break;
 
-        if (variation < 0.3) {
-            // Shade
-            l *= 0.65;
-        } 
-        else if (variation < 0.6) {
-            // Tint
-            l = Math.min(95, l * 1.3);
-        } 
-        else {
-            // Tone (desaturate)
-            s *= 0.4;
-        }
+            case 'split-complementary':
+                // Base + two colors adjacent to its complement
+                // 0, 150, 210
+                const splitOffsets = [0, 0, 150, 150, 210, 210];
+                h = baseHue + splitOffsets[i];
+                break;
 
-        // ⚪ Rare true grayscale accent (but not whole palette)
-        if (Math.random() < 0.08) {
-            s = 0;
-            l = 20 + Math.random() * 60; // nice usable gray range
+            case 'triadic':
+                // Three colors equally spaced (120 degrees)
+                const triadOffsets = [0, 0, 120, 120, 240, 240];
+                h = baseHue + triadOffsets[i];
+                break;
+
+            case 'tetradic':
+                // Two complementary pairs (Rectangle)
+                // 0, 60, 180, 240
+                const tetraOffsets = [0, 60, 180, 240, 0, 180];
+                h = baseHue + tetraOffsets[i];
+                break;
         }
 
         palette.push(hslToHex(h, s, l));
