@@ -1,6 +1,3 @@
-can you change this code to where the randomly generated colors include monochromatics, analogous, complementary, split-complementary, triadic, and tetradic values
-
-
 // ==========================
 // 🎨 PALETTE SYSTEM
 // ==========================
