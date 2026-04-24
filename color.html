@@ -25,15 +25,17 @@
                 <p>Click a color to copy its HEX code!</p>
             </div>
 
-            <!-- ⚠️ Make sure this matches your JS function -->
-            <button onclick="generatePalettes()">Generate New Palettes</button>
+            <!-- ✅ FIXED FUNCTION NAME -->
+            <button onclick="renderPalette()">Generate New Palette</button>
         </header>
 
-        <!-- ✅ THIS is what your JS needs -->
-        <div id="paletteContainer" class="grid"></div>
+        <!-- ✅ FIXED: removed grid class -->
+        <div id="paletteContainer"></div>
     </div>
 
-    <script src="data.js"></script>
+    <!-- ❌ REMOVE THIS unless you're actually using it -->
+    <!-- <script src="data.js"></script> -->
+
     <script src="script.js"></script>
 </body>
 </html>
