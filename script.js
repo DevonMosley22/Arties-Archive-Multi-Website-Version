@@ -1,94 +1,119 @@
-function randomColor() {
-    return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+
+// ==========================
+// 🎨 PALETTE SYSTEM
+// ==========================
+
+function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+
+    const f = n =>
+        Math.round(
+            255 *
+            (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
+        )
+            .toString(16)
+            .padStart(2, "0");
+
+    return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+// Generate structured palette
 function generatePalette() {
-    let colors = [];
-    while (colors.length < 6) {
-        let c = randomColor();
-        if (!colors.includes(c)) colors.push(c);
+    const palette = [];
+
+    const genre = Math.floor(Math.random() * 4);
+
+    for (let i = 0; i < 6; i++) {
+        let h = Math.floor(Math.random() * 360);
+        let s, l;
+
+        if (genre === 0) {
+            // 🌸 Pastel
+            s = 40 + Math.random() * 20;
+            l = 75 + Math.random() * 10;
+        } 
+        else if (genre === 1) {
+            // ⚡ Neon
+            s = 90 + Math.random() * 10;
+            l = 50 + Math.random() * 10;
+        } 
+        else if (genre === 2) {
+            // 🌫 Muted / earthy
+            s = 20 + Math.random() * 20;
+            l = 40 + Math.random() * 20;
+        } 
+        else {
+            // 🌈 Random vibrant hues
+            s = 60 + Math.random() * 30;
+            l = 40 + Math.random() * 30;
+        }
+
+        palette.push(hslToHex(h, s, l));
     }
-    return colors;
+
+    return palette;
 }
+// ==========================
+// 🖼️ RENDER PALETTES
+// ==========================
 
 function generatePalettes() {
     const container = document.getElementById("paletteContainer");
+    if (!container) return;
+
     container.innerHTML = "";
 
-    for (let i = 0; i < 5; i++) {
-        let palette = generatePalette();
+    for (let i = 0; i < 6; i++) {
+        const palette = generatePalette();
 
-        let div = document.createElement("div");
-        div.className = "palette";
-
-        let row = document.createElement("div");
-        row.className = "colors";
+        const paletteDiv = document.createElement("div");
+        paletteDiv.className = "palette";
 
         palette.forEach(color => {
-            let box = document.createElement("div");
+            const box = document.createElement("div");
             box.className = "color-box";
             box.style.background = color;
 
-            box.innerHTML = `
-                ${color}
-                <button onclick="navigator.clipboard.writeText('${color}')">Copy</button>
-            `;
+            // HEX text container
+            const hex = document.createElement("div");
+            hex.className = "hex";
 
-            row.appendChild(box);
+            // Copy button
+            const copyBtn = document.createElement("button");
+            copyBtn.className = "copy-btn";
+            copyBtn.textContent = "Copy";
+
+            copyBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(color);
+                copyBtn.textContent = "Copied!";
+                setTimeout(() => (copyBtn.textContent = "Copy"), 800);
+            });
+
+            hex.innerHTML = `<span>${color}</span>`;
+            hex.appendChild(copyBtn);
+
+            box.appendChild(hex);
+            paletteDiv.appendChild(box);
         });
 
-        div.appendChild(row);
-        container.appendChild(div);
+        container.appendChild(paletteDiv);
     }
 }
 
-const anatomyData = [
-    { name: "Line of Action", desc: "Pose generator.", link: "https://line-of-action.com" },
-    { name: "QuickPoses", desc: "Timed sessions.", link: "https://quickposes.com" }
-];
+// ==========================
+// 🚀 SAFE AUTO LOAD
+// ==========================
 
-function loadAnatomy() {
-    const container = document.getElementById("anatomyContainer");
+window.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("paletteContainer");
 
-    anatomyData.forEach(site => {
-        let card = document.createElement("div");
-        card.className = "card";
-
-        card.innerHTML = `
-            <h3>${site.name}</h3>
-            <p>${site.desc}</p>
-            <a href="${site.link}" target="_blank">Visit Site</a>
-        `;
-
-        container.appendChild(card);
-    });
-}
-
-const tutorialData = [
-    {
-        title: "Beginner Drawing",
-        creator: "Proko",
-        link: "https://www.youtube.com/embed/1jjmOF1hQqI"
+    // only run if we're on the color page
+    if (container) {
+        generatePalettes();
     }
-];
-
-function loadTutorials() {
-    const container = document.getElementById("tutorialContainer");
-
-    tutorialData.forEach(t => {
-        let div = document.createElement("div");
-
-        div.innerHTML = `
-            <h3>${t.title}</h3>
-            <p>${t.creator}</p>
-            <iframe src="${t.link}" allowfullscreen></iframe>
-        `;
-
-        container.appendChild(div);
-    });
-}
-
-/* auto-generate palettes on page load */
-if (window.location.pathname.includes("palettes.html")) {
-    window.onload = generatePalettes;
-}
+});
