@@ -6,9 +6,8 @@
     <title>Artie's Archive | Home</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-    <!-- NAV -->
+<body>
     <nav>
         <div class="logo">Artie's Archive</div>
         <div class="nav-links">
@@ -20,60 +19,30 @@
     </nav>
 
     <main class="container">
-
-        <!-- HEADER -->
         <header style="text-align: center; margin-bottom: 3rem;">
-            <h1>Welcome to the Archive</h1>
+            <h1>Welcome to Artie's Archive</h1>
             <p>A hand-picked collection of resources for new artists.</p>
         </header>
 
-        <!-- CATEGORY GRID -->
         <div class="grid">
             <a href="color.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
                 <h3>Color Palettes</h3>
                 <p>Generate fresh inspiration for your next piece.</p>
             </a>
+
             <a href="anatomy.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
                 <h3>Anatomy & Pose</h3>
                 <p>Curated list of free reference libraries.</p>
             </a>
+
             <a href="tutorials.html" class="card" style="text-align: center; text-decoration: none; color: inherit;">
                 <h3>Art Tutorials</h3>
                 <p>Watch and learn basics, shading, and more.</p>
             </a>
         </div>
-
-        <!-- 🔐 AUTH SECTION -->
-        <div class="card" style="margin-top: 2rem;">
-            <h3>Account</h3>
-
-            <input type="email" id="auth-email" placeholder="Email" />
-            <input type="password" id="auth-password" placeholder="Password" />
-
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button onclick="signUp()" class="btn">Sign Up</button>
-                <button onclick="signIn()" class="btn">Sign In</button>
-                <button onclick="signOut()" class="btn">Sign Out</button>
-            </div>
-
-            <p id="auth-message"></p>
-        </div>
-
-        <!-- 💾 SAVED PALETTES -->
-        <div class="card" style="margin-top:2rem;">
-            <h3>Your Saved Palettes</h3>
-            <div id="saved-palettes">
-                <p>Please sign in to view saved palettes.</p>
-            </div>
-        </div>
-
     </main>
 
-    <!-- 🔌 SUPABASE CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- YOUR SCRIPT -->
+    <!-- ✅ SAFE: load JS but it won't break homepage -->
     <script src="script.js"></script>
-
 </body>
 </html>
