@@ -8,8 +8,6 @@
 </head>
 
 <body>
-
-    <!-- NAV -->
     <nav>
         <div class="logo"><strong>Artie's Archive</strong></div>
         <div class="nav-links">
@@ -21,52 +19,23 @@
     </nav>
 
     <div class="container">
-
-        <!-- HEADER -->
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
             <div>
                 <h1>Color Palettes</h1>
                 <p>Click a color to copy its HEX code!</p>
             </div>
 
+            <!-- ✅ FIXED FUNCTION NAME -->
             <button id="generateBtn">Generate New Palette</button>
         </header>
 
-        <!-- 🔐 AUTH -->
-        <div class="card" style="margin-bottom: 2rem;">
-            <h3>Account</h3>
-
-            <input type="email" id="auth-email" placeholder="Email" />
-            <input type="password" id="auth-password" placeholder="Password" />
-
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button onclick="signUp()" class="btn">Sign Up</button>
-                <button onclick="signIn()" class="btn">Sign In</button>
-                <button onclick="signOut()" class="btn">Sign Out</button>
-            </div>
-
-            <p id="auth-message"></p>
-        </div>
-
-        <!-- 🎨 GENERATED PALETTES -->
-        <!-- ⚠️ IMPORTANT: ID must match JS -->
-        <div id="palette-workspace"></div>
-
-        <!-- 💾 SAVED PALETTES -->
-        <div class="card" style="margin-top:2rem;">
-            <h3>Your Saved Palettes</h3>
-            <div id="saved-palettes">
-                <p>Please sign in to view saved palettes.</p>
-            </div>
-        </div>
-
+        <!-- ✅ FIXED: removed grid class -->
+        <div id="paletteContainer"></div>
     </div>
 
-    <!-- 🔌 SUPABASE -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ❌ REMOVE THIS unless you're actually using it -->
+    <!-- <script src="data.js"></script> -->
 
-    <!-- YOUR SCRIPT -->
     <script src="script.js"></script>
-
 </body>
 </html>
