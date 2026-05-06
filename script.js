@@ -1,7 +1,17 @@
 // ==========================
 // 🎨 COLOR CONVERSION
 // ==========================
+// ==========================
+// 🔌 SUPABASE CONNECTION
+// ==========================
 
+const SUPABASE_URL = "https://ykhwhwvqrhvasykuugki.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_JJJknt6yDJqL9XbGdxAcBw__9uTZxac";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 function hslToHex(h, s, l) {
     s /= 100;
     l /= 100;
