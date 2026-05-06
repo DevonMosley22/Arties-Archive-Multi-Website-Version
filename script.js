@@ -177,5 +177,59 @@ document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
         e.preventDefault();
         renderPalette();
+    }// ==========================
+// 🔐 AUTH FUNCTIONS
+// ==========================
+
+async function signUp() {
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+    const message = document.getElementById("auth-message");
+
+    if (!email || !password) {
+        message.textContent = "Email and password required.";
+        return;
     }
+
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        message.textContent = error.message;
+    } else {
+        message.textContent = "Account created! You can now sign in.";
+    }
+}
+
+async function signIn() {
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+    const message = document.getElementById("auth-message");
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        message.textContent = error.message;
+    } else {
+        message.textContent = "Signed in successfully!";
+        console.log("User:", data.user);
+    }
+}
+
+async function signOut() {
+    const message = document.getElementById("auth-message");
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+        message.textContent = "Error signing out.";
+    } else {
+        message.textContent = "Signed out.";
+    }
+}
 });
