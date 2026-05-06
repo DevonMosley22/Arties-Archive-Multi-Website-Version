@@ -1,81 +1,171 @@
-// Color Palette Generator
-function generateRandomColor() {
-    const chars = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-        color += chars[Math.floor(Math.random() * 16)];
-    }
-    return color;
+// ==========================
+// 🎨 COLOR CONVERSION
+// ==========================
+
+function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+
+    const f = n =>
+        Math.round(
+            255 *
+            (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
+        )
+            .toString(16)
+            .padStart(2, "0");
+
+    return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-function createPalette() {
+// ==========================
+// 🎨 PALETTE GENERATOR
+// ==========================
+
+function generatePalette() {
     const palette = [];
-    for (let i = 0; i < 6; i++) {
-        palette.push(generateRandomColor());
+
+    const baseHue = Math.floor(Math.random() * 360);
+
+    const harmonies = [
+        "monochromatic",
+        "analogous",
+        "complementary",
+        "split",
+        "triadic",
+        "tetradic"
+    ];
+
+    const harmony =
+        harmonies[Math.floor(Math.random() * harmonies.length)];
+
+    const styles = ["pastel", "neon", "muted", "vibrant"];
+    const style = styles[Math.floor(Math.random() * styles.length)];
+
+    function getSL(index = 0) {
+        let s, l;
+
+        switch (style) {
+            case "pastel":
+                s = 40 + Math.random() * 20;
+                l = 70 + index * 5;
+                break;
+            case "neon":
+                s = 85 + Math.random() * 15;
+                l = 50 + (index % 2) * 10;
+                break;
+            case "muted":
+                s = 20 + Math.random() * 20;
+                l = 35 + index * 6;
+                break;
+            default:
+                s = 60 + Math.random() * 30;
+                l = 45 + Math.random() * 15;
+        }
+
+        return { s, l };
     }
+
+    function addColor(h, i) {
+        const { s, l } = getSL(i);
+        palette.push(hslToHex((h + 360) % 360, s, l));
+    }
+
+    switch (harmony) {
+        case "monochromatic":
+            for (let i = 0; i < 6; i++) addColor(baseHue, i);
+            break;
+
+        case "analogous":
+            [-30, -15, 0, 15, 30, 45].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
+            break;
+
+        case "complementary":
+            for (let i = 0; i < 3; i++) {
+                addColor(baseHue, i);
+                addColor(baseHue + 180, i);
+            }
+            break;
+
+        case "split":
+            [0, 150, 210, -30, 30, 180].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
+            break;
+
+        case "triadic":
+            for (let i = 0; i < 2; i++) {
+                addColor(baseHue, i);
+                addColor(baseHue + 120, i);
+                addColor(baseHue + 240, i);
+            }
+            break;
+
+        case "tetradic":
+            [0, 90, 180, 270, 45, 225].forEach((o, i) =>
+                addColor(baseHue + o, i)
+            );
+            break;
+    }
+
     return palette;
 }
 
-function renderPalettes() {
-    const container = document.getElementById('palette-workspace');
-    if(!container) return;
-    container.innerHTML = '';
+// ==========================
+// 🖼️ RENDER SINGLE PALETTE
+// ==========================
 
-    const names = ["Morning Mist", "Sunset Bloom", "Ocean Deep", "Forest Path", "Berry Sorbet"];
+function renderPalette() {
+    const container = document.getElementById("paletteContainer");
+    if (!container) return;
 
-    for (let i = 0; i < 5; i++) {
-        const colors = createPalette();
-        const div = document.createElement('div');
-        div.className = 'card palette-container';
-        
-        let swatchesHtml = `<div class="swatch-group">`;
-        colors.forEach(c => {
-            swatchesHtml += `<div class="swatch" style="background:${c}" onclick="navigator.clipboard.writeText('${c}')">${c}</div>`;
+    container.innerHTML = "";
+
+    const palette = generatePalette();
+
+    palette.forEach(color => {
+        const swatch = document.createElement("div");
+        swatch.classList.add("color-box");
+        swatch.style.backgroundColor = color;
+
+        const label = document.createElement("span");
+        label.textContent = color;
+
+        // 🔥 click to copy
+        swatch.addEventListener("click", () => {
+            navigator.clipboard.writeText(color);
+            label.textContent = "Copied!";
+            setTimeout(() => (label.textContent = color), 1000);
         });
-        swatchesHtml += `</div>`;
 
-        div.innerHTML = `
-            <h4>${names[i]} ${Math.floor(Math.random()*100)}</h4>
-            ${swatchesHtml}
-            <small>Click color to copy HEX</small>
-        `;
-        container.appendChild(div);
+        swatch.appendChild(label);
+        container.appendChild(swatch);
+    });
+}
+
+// ==========================
+// 🚀 INIT
+// ==========================
+
+window.addEventListener("DOMContentLoaded", () => {
+    renderPalette();
+
+    // Button hookup (no inline JS needed)
+    const btn = document.getElementById("generateBtn");
+    if (btn) btn.addEventListener("click", renderPalette);
+});
+
+// ==========================
+// ⌨️ SPACEBAR GENERATION
+// ==========================
+
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        e.preventDefault();
+        renderPalette();
     }
-}
-
-// Data Loaders
-function loadAnatomy() {
-    const list = document.getElementById('anatomy-list');
-    if(!list) return;
-    ART_DATA.anatomy.forEach(item => {
-        list.innerHTML += `
-            <div class="card">
-                <h3>${item.name}</h3>
-                <p>${item.desc}</p>
-                <a href="${item.url}" target="_blank" class="btn">Visit Site</a>
-            </div>
-        `;
-    });
-}
-
-function loadTutorials() {
-    const list = document.getElementById('tutorial-list');
-    if(!list) return;
-    ART_DATA.tutorials.forEach(item => {
-        list.innerHTML += `
-            <div class="card">
-                <small>${item.category} | ${item.platform}</small>
-                <h3>${item.title}</h3>
-                <p>By ${item.creator}</p>
-                <iframe width="100%" height="200" src="https://www.youtube.com/embed/${item.id}" frameborder="0" allowfullscreen></iframe>
-            </div>
-        `;
-    });
-}
-
-// Run on load
-window.onload = () => {
-    renderPalettes();
-    loadAnatomy();
-    loadTutorials();
-};
+});
