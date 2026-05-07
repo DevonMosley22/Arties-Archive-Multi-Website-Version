@@ -1,4 +1,73 @@
 // ==========================
+// 🔑 SUPABASE SETUP
+// ==========================
+
+const SUPABASE_URL = "https://ykhwhwvqrhvasykuugki.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_JJJknt6yDJqL9XbGdxAcBw__9uTZxac";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+// ==========================
+// 👤 AUTH
+// ==========================
+
+async function signUp() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password
+    });
+
+    if (error) {
+        alert(error.message);
+    } else {
+        alert("Check your email for verification!");
+    }
+}
+
+async function logIn() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        alert(error.message);
+    } else {
+        updateUserUI();
+    }
+}
+
+async function logOut() {
+    await supabaseClient.auth.signOut();
+    updateUserUI();
+}
+
+async function updateUserUI() {
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    const status = document.getElementById("userStatus");
+
+    if (!status) return;
+
+    if (user) {
+        status.textContent = `Logged in as ${user.email}`;
+    } else {
+        status.textContent = "Not logged in";
+    }
+}
+
+// ==========================
 // 🎨 COLOR CONVERSION
 // ==========================
 
@@ -23,6 +92,8 @@ function hslToHex(h, s, l) {
 // ==========================
 // 🎨 PALETTE GENERATOR
 // ==========================
+
+let currentPalette = [];
 
 function generatePalette() {
     const palette = [];
@@ -52,14 +123,17 @@ function generatePalette() {
                 s = 40 + Math.random() * 20;
                 l = 70 + index * 5;
                 break;
+
             case "neon":
                 s = 85 + Math.random() * 15;
                 l = 50 + (index % 2) * 10;
                 break;
+
             case "muted":
                 s = 20 + Math.random() * 20;
                 l = 35 + index * 6;
                 break;
+
             default:
                 s = 60 + Math.random() * 30;
                 l = 45 + Math.random() * 15;
@@ -116,35 +190,76 @@ function generatePalette() {
 }
 
 // ==========================
-// 🖼️ RENDER SINGLE PALETTE
+// 🖼️ RENDER PALETTE
 // ==========================
 
 function renderPalette() {
     const container = document.getElementById("paletteContainer");
+
     if (!container) return;
 
     container.innerHTML = "";
 
-    const palette = generatePalette();
+    currentPalette = generatePalette();
 
-    palette.forEach(color => {
+    currentPalette.forEach(color => {
+
         const swatch = document.createElement("div");
+
         swatch.classList.add("color-box");
+
         swatch.style.backgroundColor = color;
 
         const label = document.createElement("span");
+
         label.textContent = color;
 
-        // 🔥 click to copy
         swatch.addEventListener("click", () => {
+
             navigator.clipboard.writeText(color);
+
             label.textContent = "Copied!";
-            setTimeout(() => (label.textContent = color), 1000);
+
+            setTimeout(() => {
+                label.textContent = color;
+            }, 1000);
         });
 
         swatch.appendChild(label);
+
         container.appendChild(swatch);
     });
+}
+
+// ==========================
+// 💾 SAVE PALETTE
+// ==========================
+
+async function savePalette() {
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+        alert("You must be logged in.");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("saved_palettes")
+        .insert([
+            {
+                user_id: user.id,
+                palette: currentPalette
+            }
+        ]);
+
+    if (error) {
+        alert(error.message);
+    } else {
+        alert("Palette saved!");
+    }
 }
 
 // ==========================
@@ -152,11 +267,40 @@ function renderPalette() {
 // ==========================
 
 window.addEventListener("DOMContentLoaded", () => {
+
     renderPalette();
 
-    // Button hookup (no inline JS needed)
+    updateUserUI();
+
     const btn = document.getElementById("generateBtn");
-    if (btn) btn.addEventListener("click", renderPalette);
+
+    if (btn) {
+        btn.addEventListener("click", renderPalette);
+    }
+
+    const saveBtn = document.getElementById("saveBtn");
+
+    if (saveBtn) {
+        saveBtn.addEventListener("click", savePalette);
+    }
+
+    const signupBtn = document.getElementById("signupBtn");
+
+    if (signupBtn) {
+        signupBtn.addEventListener("click", signUp);
+    }
+
+    const loginBtn = document.getElementById("loginBtn");
+
+    if (loginBtn) {
+        loginBtn.addEventListener("click", logIn);
+    }
+
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", logOut);
+    }
 });
 
 // ==========================
@@ -164,8 +308,11 @@ window.addEventListener("DOMContentLoaded", () => {
 // ==========================
 
 document.addEventListener("keydown", (e) => {
+
     if (e.code === "Space") {
+
         e.preventDefault();
+
         renderPalette();
     }
 });
