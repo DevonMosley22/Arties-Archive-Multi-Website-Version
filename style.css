@@ -135,3 +135,24 @@ button:hover {
         height: 80px;
     }
 }
+.auth-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    padding: 20px;
+    margin: 20px auto;
+
+    max-width: 1000px;
+}
+
+.auth-container input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#userStatus {
+    font-weight: bold;
+}
